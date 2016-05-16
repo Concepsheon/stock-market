@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--[if lte IE 6]><html class="preIE7 preIE8 preIE9"><![endif]-->
+<!--[if IE 7]><html class="preIE8 preIE9"><![endif]-->
+<!--[if IE 8]><html class="preIE9"><![endif]-->
+<!--[if gte IE 9]><!--><html lang="en" ng-app="app"><!--<![endif]-->
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>title</title>
+    <meta name="author" content="Concepsheon Hall">
+    <meta name="description" content="description here">
+    <meta name="keywords" content="keywords,here">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/angular.chartjs/0.8.8/angular-chart.css">
+    <link rel="icon" href="data:;base64,=">
+  </head>
+  <body ng-controller="StockCtrl">
+      
+      <h1>Stocks</h1>
+      
+        <input id="stockcode" type="text" ng-model="stockcode" placeholder="Stock code">
+        <button type="button" ng-click="fetch()">Add Stock</button>
+        
+        <div ng-if="error">{{error}}</div>
+        <canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels" chart-legend="true" chart-series="series">
+        </canvas> 
+      
+        <div id="legend" class="chart-legend text-center"></div>
+        <div class="chart-legend-help text-center">Click on Legend to hide/show line</div>
+      
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/angular.chartjs/0.8.8/angular-chart.min.js"></script>
+      <script src="/javascripts/app.js"></script>
+      <script src="/socket.io/socket.io.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+      <script>
+        var socket = io();
+        
+        $("button").click(function(){
+          socket.emit('stock added', $('#stockcode').val());
+          $('#stockcode').val('')
+          return false;
+        });
+        
+        socket.on('stock added', function(code){
+          $("#legend").append($('<div>').text(code));
+        })
+        
+      </script>
+
+  </body>
+</html>
